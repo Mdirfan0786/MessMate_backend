@@ -2,6 +2,10 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
+
+const errorMiddleware = require("./middleware/errorMiddleware");
 
 const sequelize = require("./config/db");
 
@@ -14,13 +18,20 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 
+app.use(helmet());
+
+app.use(morgan("dev"));
+
 app.use(cors());
+
 app.use(express.json());
 
 // Routes
 
 app.use("/api/messes", messRoutes);
 app.use("/api/auth", authRoute);
+
+app.use(errorMiddleware);
 
 // Database Connection
 
@@ -39,5 +50,5 @@ sequelize
     });
   })
   .catch((err) => {
-    console.log("Database Error:", err.message);
+    logger.error(`Database Error: ${err.message}`);
   });
