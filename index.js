@@ -50,5 +50,5 @@ sequelize
     });
   })
   .catch((err) => {
-    logger.error(`Database Error: ${err.message}`);
+    console.error("Database Error:", err);
   });
